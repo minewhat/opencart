@@ -1,0 +1,110 @@
+<modification>
+	<id><![CDATA[MineWhat Analytics]]></id>
+	<version><![CDATA[1.3]]></version>
+	<vqmver><![CDATA[2.1.6]]></vqmver>
+	<author><![CDATA[MineWhat Inc.]]></author>
+
+	<file name="catalog/controller/common/footer.php">
+		<operation>
+			<search position="before" offset="1"><![CDATA[$this->render(]]></search>
+			<add><![CDATA[
+				// Load MineWhat event tracking script
+				$this->load->model('tool/minewhat');
+				$this->data['minewhat_id'] = $this->model_tool_minewhat->getMineWhatID();
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search position="before" offset="1"><![CDATA[</body>]]></search>
+			<add><![CDATA[
+				<?php if(isset($minewhat_id) && strlen($minewhat_id) > 0) { ?>
+				<!-- MineWhat Script begins -->
+				<script type='text/javascript'>
+
+					(function() {
+						function async_load(){
+							if(!window.MWSDK){
+									var s = document.createElement('script');
+									var toload = 'beaconhttp.minewhat.com';
+									s.type = 'text/javascript';
+									s.async = true;
+									if(location.protocol=='https:')
+										toload ='d2ft2mgd1hddln.cloudfront.net';
+									s.src = '//' +  toload  + '/site/ethno/<?php echo $minewhat_id; ?>/minewhat.js';
+									var x = document.getElementsByTagName('script')[0];
+									x.parentNode.insertBefore(s, x);
+							}
+						}
+
+						if(window.MWSDK && window.MWSDK.reinit)
+											window.MWSDK.reinit();
+
+						if (window.attachEvent) window.attachEvent('onload', async_load);
+						else window.addEventListener('load', async_load, false);
+					})();
+
+				</script>
+				<!-- MineWhat Script ends -->
+				<?php } ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="before" offset="1"><![CDATA[$this->render(]]></search>
+			<add><![CDATA[
+				// Load MineWhat product tracking script
+				$this->load->model('tool/minewhat');
+				$this->data['minewhat_product_data'] = $this->model_tool_minewhat->getMineWhatProductData();
+				$this->data['minewhat_product_tracking_script'] = $this->model_tool_minewhat->getMineWhatProductTrcakingScript();
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search position="before" offset="0"><![CDATA[<?php echo $footer; ?>]]></search>
+			<add><![CDATA[
+				<?php if(isset($minewhat_product_data) && strlen($minewhat_product_data) > 0) { ?>
+					<script type="text/mwdata">
+					<?php echo $minewhat_product_data; ?>
+					</script>
+				<?php	} ?>
+				<?php if(isset($minewhat_product_tracking_script) && strlen($minewhat_product_tracking_script) > 0) { ?>
+					<script type="text/javascript">
+					<?php echo $minewhat_product_tracking_script; ?>
+					</script>
+				<?php	} ?>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/checkout/success.php">
+		<operation>
+			<search position="after"><![CDATA[function index() {]]></search>
+			<add><![CDATA[
+				if (isset($this->session->data['order_id']) and (!empty($this->session->data['order_id']))) {
+					$this->load->model('tool/minewhat');
+					$this->data['minewhat_purchase_tracking_script'] = $this->model_tool_minewhat->getMineWhatPurchaseTrackingScript($this->session->data['order_id']);
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/common/success.tpl">
+		<operation>
+			<search position="before" offset="0"><![CDATA[<?php echo $footer; ?>]]></search>
+			<add><![CDATA[
+				<?php if(isset($minewhat_purchase_tracking_script) && strlen($minewhat_purchase_tracking_script) > 0) { ?>
+					<script type="text/javascript">
+					<?php echo $minewhat_purchase_tracking_script; ?>
+					</script>
+				<?php	} ?>
+			]]></add>
+		</operation>
+	</file>
+
+</modification>
