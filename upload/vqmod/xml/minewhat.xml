@@ -4,7 +4,7 @@
 	<vqmver><![CDATA[2.1.6]]></vqmver>
 	<author><![CDATA[MineWhat Inc.]]></author>
 
-	<file name="catalog/controller/common/footer.php">
+	<file name="catalog/controller/common/header.php">
 		<operation>
 			<search position="before" offset="1"><![CDATA[$this->render(]]></search>
 			<add><![CDATA[
@@ -17,7 +17,7 @@
 
 	<file name="catalog/view/theme/*/template/common/footer.tpl">
 		<operation>
-			<search position="before" offset="1"><![CDATA[</body>]]></search>
+			<search position="before" offset="1"><![CDATA[</head>]]></search>
 			<add><![CDATA[
 				<?php if(isset($minewhat_id) && strlen($minewhat_id) > 0) { ?>
 				<!-- MineWhat Script begins -->
