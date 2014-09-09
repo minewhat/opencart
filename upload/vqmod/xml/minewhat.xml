@@ -15,7 +15,7 @@
 		</operation>
 	</file>
 
-	<file name="catalog/view/theme/*/template/common/footer.tpl">
+	<file name="catalog/view/theme/*/template/common/header.tpl">
 		<operation>
 			<search position="before" offset="1"><![CDATA[</head>]]></search>
 			<add><![CDATA[
@@ -47,6 +47,12 @@
 
 				</script>
 				<!-- MineWhat Script ends -->
+				<?php if($this->customer->isLogged()) { ?>
+				<script>
+				    var _mwapi = _mwapi || [];
+				    _mwapi.push(['trackUser', '<?php echo $this->customer->getEmail(); ?>']);
+				</script>
+				<?php } ?>
 				<?php } ?>
 			]]></add>
 		</operation>
